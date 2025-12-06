@@ -1,18 +1,28 @@
-import { useState } from "react";
-import { DashboardLayout } from "./DashboardLayout";
-import { Plus, ChevronLeft, ChevronRight, Clock, MapPin, Video, Users } from "lucide-react";
-import { format, isSameDay, addMonths, subMonths } from "date-fns";
-import { mockAppointments } from "../data/mockData";
-import "./CalendarPage.css";
+import { useState } from 'react';
+import { DashboardLayout } from '../Layout/DashBoardLayout';
+import { mockAppointments } from '@/data/mockData';
+//import { Appointment } from '@/types';
+import {
+    ChevronLeft,
+    ChevronRight,
+    Plus,
+    Clock,
+    MapPin,
+    Video,
+    Users,
+} from 'lucide-react';
 
-const typeColors: Record<string, string> = {
-    "Court Hearing": "court",
-    Deadline: "deadline",
-    Meeting: "meeting",
-    Consultation: "consultation",
-    Deposition: "deposition",
-    Other: "other",
-};
+import {
+    isSameDay,
+    format,
+    addMonths,
+    subMonths,
+    startOfMonth,
+    endOfMonth,
+    eachDayOfInterval,
+} from 'date-fns';
+
+import './CalendarPage.scss';
 
 export default function CalendarPage() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -22,88 +32,133 @@ export default function CalendarPage() {
         isSameDay(apt.date, selectedDate)
     );
 
+    const daysArray = eachDayOfInterval({
+        start: startOfMonth(currentMonth),
+        end: endOfMonth(currentMonth),
+    });
+
     const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
     const handleNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
 
-    const handleNewAppointment = () => {
-        alert("New appointment form would open here");
-    };
-
     return (
         <DashboardLayout title="Calendar" subtitle="Manage appointments and deadlines">
-            <div className="calendar-page-grid">
-                {/* Calendar */}
-                <div className="calendar-section">
-                    <div className="card">
-                        <div className="card-header">
-                            <div className="header-left">
-                                <h3>{format(currentMonth, "MMMM yyyy")}</h3>
-                                <div className="month-controls">
-                                    <button onClick={handlePrevMonth}>
-                                        <ChevronLeft />
-                                    </button>
-                                    <button onClick={handleNextMonth}>
-                                        <ChevronRight />
-                                    </button>
-                                </div>
+            <div className="calendar-page">
+                {/* LEFT: CALENDAR */}
+                <div className="calendar-container">
+                    <div className="calendar-card">
+                        <div className="calendar-header">
+                            <h2>{format(currentMonth, 'MMMM yyyy')}</h2>
+
+                            <div className="month-nav">
+                                <button onClick={handlePrevMonth}>
+                                    <ChevronLeft size={18} />
+                                </button>
+                                <button onClick={handleNextMonth}>
+                                    <ChevronRight size={18} />
+                                </button>
                             </div>
-                            <button className="new-appointment-btn" onClick={handleNewAppointment}>
-                                <Plus /> New Appointment
+
+                            <button className="btn-gold">
+                                <Plus size={16} />
+                                New Appointment
                             </button>
                         </div>
 
-                        <div className="card-content">
-                            {/* Calendar grid (simplified example) */}
-                            <p className="calendar-placeholder">
-                                Calendar grid would go here (you can implement your own or integrate a date picker)
-                            </p>
+                        <div className="calendar-grid">
+                            {daysArray.map((date) => {
+                                const isToday = isSameDay(date, new Date());
+                                const isSelected = isSameDay(date, selectedDate);
+
+                                const dayAppointments = mockAppointments.filter((apt) =>
+                                    isSameDay(apt.date, date)
+                                );
+
+                                return (
+                                    <button
+                                        key={date.toString()}
+                                        className={`day-cell 
+                      ${isToday ? 'today' : ''} 
+                      ${isSelected ? 'selected' : ''}`}
+                                        onClick={() => setSelectedDate(date)}
+                                    >
+                                        <span className="day-number">{format(date, 'd')}</span>
+
+                                        {/* Appointment badges */}
+                                        <div className="day-badges">
+                                            {dayAppointments.slice(0, 2).map((apt) => (
+                                                <span key={apt.id} className="apt-badge">
+                                                    {apt.title.slice(0, 12)}...
+                                                </span>
+                                            ))}
+
+                                            {dayAppointments.length > 2 && (
+                                                <span className="more-count">
+                                                    +{dayAppointments.length - 2} more
+                                                </span>
+                                            )}
+                                        </div>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
 
-                {/* Appointments for selected date */}
-                <div className="appointments-section">
-                    <div className="card sticky">
-                        <div className="card-header">
-                            <h4>
-                                {format(selectedDate, "EEEE, MMMM d")}
-                                {isSameDay(selectedDate, new Date()) && <span className="badge">Today</span>}
-                            </h4>
+                {/* RIGHT: LIST OF APPOINTMENTS */}
+                <div className="appointments-container">
+                    <div className="appointments-card">
+                        <div className="appointments-header">
+                            <h3>{format(selectedDate, 'EEEE, MMMM d')}</h3>
                         </div>
 
-                        <div className="card-content">
+                        <div className="appointments-list">
                             {appointmentsOnSelectedDate.length > 0 ? (
-                                appointmentsOnSelectedDate.map((apt) => (
-                                    <div key={apt.id} className={`appointment ${typeColors[apt.type]}`}>
-                                        <div className="appointment-header">
-                                            <strong>{apt.title}</strong>
-                                            <span className="appointment-type">{apt.type}</span>
+                                appointmentsOnSelectedDate.map((appointment) => (
+                                    <div key={appointment.id} className="appointment-item">
+                                        <div className="apt-top">
+                                            <h4>{appointment.title}</h4>
+                                            <span className="apt-type">{appointment.type}</span>
                                         </div>
-                                        <div className="appointment-details">
-                                            <div>
-                                                <Users /> {apt.clientName}
+
+                                        <div className="apt-meta">
+                                            <div className="meta-row">
+                                                <Users size={14} />
+                                                {appointment.clientName}
                                             </div>
-                                            <div>
-                                                <Clock /> {apt.time} {apt.duration > 0 && `• ${apt.duration} min`}
+
+                                            <div className="meta-row">
+                                                <Clock size={14} />
+                                                {appointment.time}
+                                                {appointment.duration > 0 && ` • ${appointment.duration} min`}
                                             </div>
-                                            {apt.location && (
-                                                <div>
-                                                    {apt.isVirtual ? <Video /> : <MapPin />} {apt.location}
+
+                                            {appointment.location && (
+                                                <div className="meta-row">
+                                                    {appointment.isVirtual ? (
+                                                        <Video size={14} />
+                                                    ) : (
+                                                        <MapPin size={14} />
+                                                    )}
+                                                    {appointment.location}
                                                 </div>
                                             )}
                                         </div>
-                                        {apt.description && <p className="appointment-description">{apt.description}</p>}
+
+                                        {appointment.description && (
+                                            <p className="apt-description">{appointment.description}</p>
+                                        )}
                                     </div>
                                 ))
                             ) : (
                                 <div className="no-appointments">
-                                    <div className="icon">
-                                        <Clock />
+                                    <div className="icon-circle">
+                                        <Clock size={28} />
                                     </div>
-                                    <p>No Appointments</p>
-                                    <p>Nothing scheduled for this day</p>
-                                    <button className="add-event-btn" onClick={handleNewAppointment}>
-                                        <Plus /> Add Event
+                                    <h4>No Appointments</h4>
+                                    <p>Nothing scheduled for this day.</p>
+                                    <button className="btn-outline-sm">
+                                        <Plus size={14} />
+                                        Add Event
                                     </button>
                                 </div>
                             )}
