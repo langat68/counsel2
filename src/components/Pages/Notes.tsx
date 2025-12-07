@@ -1,7 +1,7 @@
 import { useState } from "react";
-import DashboardLayout from "./DashboardLayout"; // update path if needed
-import { mockNotes, mockClients } from "@/data/mockData";
-import { CaseNote } from "@/types";
+import { DashboardLayout } from "../Layout/DashBoardLayout"; // update path if needed
+import { CaseNote, Client } from "@/types";
+import "./Notes.scss"
 import {
     Search,
     Plus,
@@ -17,12 +17,14 @@ import "./Notes.scss";
 
 export default function Notes() {
     const [search, setSearch] = useState("");
-    const [selectedNote, setSelectedNote] = useState<CaseNote | null>(
-        mockNotes[0] || null
-    );
+    const [selectedNote, setSelectedNote] = useState<CaseNote | null>(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    const filteredNotes = mockNotes.filter((note) => {
+    // Placeholder data
+    const notes: CaseNote[] = [];
+    const clients: Client[] = [];
+
+    const filteredNotes = notes.filter((note) => {
         const term = search.toLowerCase();
         return (
             note.title.toLowerCase().includes(term) ||
@@ -32,7 +34,7 @@ export default function Notes() {
     });
 
     const getClientName = (id: string) =>
-        mockClients.find((c) => c.id === id)?.name || "Unknown Client";
+        clients.find((c) => c.id === id)?.name || "Unknown Client";
 
     return (
         <DashboardLayout title="Case Notes" subtitle="Document and track case progress">
@@ -60,44 +62,49 @@ export default function Notes() {
                         </div>
 
                         <div className="card-body notes-scroll">
-                            {filteredNotes.map((note) => (
-                                <div
-                                    key={note.id}
-                                    className={`note-item ${selectedNote?.id === note.id ? "active" : ""
-                                        }`}
-                                    onClick={() => {
-                                        setSelectedNote(note);
-                                        setIsEditing(false);
-                                    }}
-                                >
-                                    <div className="note-item-top">
-                                        <h4>{note.title}</h4>
-                                        {note.isPublic ? (
-                                            <Eye size={16} className="icon-public" />
-                                        ) : (
-                                            <EyeOff size={16} className="icon-private" />
-                                        )}
+                            {filteredNotes.length > 0 ? (
+                                filteredNotes.map((note) => (
+                                    <div
+                                        key={note.id}
+                                        className={`note-item ${selectedNote?.id === note.id ? "active" : ""
+                                            }`}
+                                        onClick={() => {
+                                            setSelectedNote(note);
+                                            setIsEditing(false);
+                                        }}
+                                    >
+                                        <div className="note-item-top">
+                                            <h4>{note.title}</h4>
+                                            {note.isPublic ? (
+                                                <Eye size={16} className="icon-public" />
+                                            ) : (
+                                                <EyeOff size={16} className="icon-private" />
+                                            )}
+                                        </div>
+
+                                        <p className="client">{getClientName(note.clientId)}</p>
+                                        <p className="excerpt">{note.content}</p>
+
+                                        <div className="note-footer">
+                                            <span className="date">{format(note.createdAt, "MMM d")}</span>
+
+                                            {note.tags.slice(0, 2).map((tag) => (
+                                                <span key={tag} className="tag-badge">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
-
-                                    <p className="client">{getClientName(note.clientId)}</p>
-                                    <p className="excerpt">{note.content}</p>
-
-                                    <div className="note-footer">
-                                        <span className="date">{format(note.createdAt, "MMM d")}</span>
-
-                                        {note.tags.slice(0, 2).map((tag) => (
-                                            <span key={tag} className="tag-badge">
-                                                {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-
-                            {filteredNotes.length === 0 && (
+                                ))
+                            ) : (
                                 <div className="empty-list">
                                     <FileText size={32} />
-                                    <p>No notes found</p>
+                                    <h4>No Notes Yet</h4>
+                                    <p>Create your first case note to get started</p>
+                                    <button className="btn btn-gold">
+                                        <Plus size={16} />
+                                        New Note
+                                    </button>
                                 </div>
                             )}
                         </div>

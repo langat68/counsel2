@@ -8,8 +8,6 @@ import UpcomingAppointments from "../Dashboard/UpcomingAppointments";
 import QuickActions from "../Dashboard/QuickActions";
 import CaseChart from "../Dashboard/CaseChart";
 
-import { mockClients, mockAppointments, mockStats } from "@/data/mockData";
-
 import "./Dashboard.scss";
 
 export default function Dashboard() {
@@ -17,29 +15,40 @@ export default function Dashboard() {
 
     const handleNewClient = () => {
         navigate("/clients");
-        // toast.info('Opening client management...');
     };
 
     const handleUploadDocument = () => {
         navigate("/documents");
-        // toast.info('Opening document manager...');
     };
 
     const handleNewAppointment = () => {
         navigate("/calendar");
-        // toast.info('Opening calendar...');
     };
 
     const handleNewNote = () => {
         navigate("/notes");
-        // toast.info('Opening case notes...');
     };
 
+    // Placeholder stats data
+    const stats = {
+        totalClients: 0,
+        activeCases: 0,
+        pendingCases: 0,
+        closedCases: 0,
+        documentsUploaded: 0,
+    };
+
+    // Placeholder clients data
+    const clients = [];
+
+    // Placeholder appointments data
+    const appointments = [];
+
     const caseData = {
-        active: mockStats.activeCases,
-        pending: mockStats.pendingCases,
-        closed: mockStats.closedCases,
-        onHold: 1,
+        active: stats.activeCases,
+        pending: stats.pendingCases,
+        closed: stats.closedCases,
+        onHold: 0,
     };
 
     return (
@@ -53,24 +62,24 @@ export default function Dashboard() {
                 <div className="stats-grid">
                     <StatCard
                         title="Total Clients"
-                        value={mockStats.totalClients}
+                        value={stats.totalClients}
                         icon={Users}
-                        trend={{ value: 12, isPositive: true }}
+                        trend={{ value: 0, isPositive: true }}
                         delay={0}
                     />
 
                     <StatCard
                         title="Active Cases"
-                        value={mockStats.activeCases}
+                        value={stats.activeCases}
                         icon={Briefcase}
-                        trend={{ value: 8, isPositive: true }}
+                        trend={{ value: 0, isPositive: true }}
                         delay={50}
                         iconClassName="icon-success"
                     />
 
                     <StatCard
                         title="Pending Cases"
-                        value={mockStats.pendingCases}
+                        value={stats.pendingCases}
                         icon={Clock}
                         delay={100}
                         iconClassName="icon-warning"
@@ -78,9 +87,9 @@ export default function Dashboard() {
 
                     <StatCard
                         title="Documents"
-                        value={mockStats.documentsUploaded}
+                        value={stats.documentsUploaded}
                         icon={FileText}
-                        trend={{ value: 24, isPositive: true }}
+                        trend={{ value: 0, isPositive: true }}
                         delay={150}
                         iconClassName="icon-info"
                     />
@@ -90,8 +99,8 @@ export default function Dashboard() {
                 <div className="content-grid">
                     {/* Left Column */}
                     <div className="left-column">
-                        <RecentClients clients={mockClients} />
-                        <UpcomingAppointments appointments={mockAppointments} />
+                        <RecentClients clients={clients} />
+                        <UpcomingAppointments appointments={appointments} />
                     </div>
 
                     {/* Right Column */}

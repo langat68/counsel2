@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { DashboardLayout } from '../Layout/DashBoardLayout';
-import { mockAppointments } from '@/data/mockData';
-//import { Appointment } from '@/types';
+import { Appointment } from '@/types';
+import "./CalendarPage.scss"
 import {
     ChevronLeft,
     ChevronRight,
@@ -28,7 +28,10 @@ export default function CalendarPage() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
-    const appointmentsOnSelectedDate = mockAppointments.filter((apt) =>
+    // Placeholder appointments data
+    const appointments: Appointment[] = [];
+
+    const appointmentsOnSelectedDate = appointments.filter((apt) =>
         isSameDay(apt.date, selectedDate)
     );
 
@@ -69,7 +72,7 @@ export default function CalendarPage() {
                                 const isToday = isSameDay(date, new Date());
                                 const isSelected = isSameDay(date, selectedDate);
 
-                                const dayAppointments = mockAppointments.filter((apt) =>
+                                const dayAppointments = appointments.filter((apt) =>
                                     isSameDay(apt.date, date)
                                 );
 

@@ -1,11 +1,10 @@
-// Pure TSX — all styling removed, only semantic HTML
-// lucide-react icons kept
+
 
 import { useState } from 'react';
 import { Search, Plus, Mail, Phone, Building2, MoreHorizontal } from 'lucide-react';
-import { mockClients } from '@/data/mockData';
 import { Client, CaseStatus, CaseType } from '@/types';
 import { format } from 'date-fns';
+import "./Clients.scss"
 
 export default function Clients() {
     const [search, setSearch] = useState('');
@@ -13,12 +12,15 @@ export default function Clients() {
     const [typeFilter, setTypeFilter] = useState<string>('all');
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
+    // Placeholder clients data
+    const clients: Client[] = [];
+
     const caseTypes: CaseType[] = [
         'Corporate', 'Criminal', 'Family', 'Immigration', 'Real Estate', 'Personal Injury',
         'Intellectual Property', 'Employment', 'Tax', 'Other'
     ];
 
-    const filteredClients = mockClients.filter((client) => {
+    const filteredClients = clients.filter((client) => {
         const matchesSearch =
             client.name.toLowerCase().includes(search.toLowerCase()) ||
             client.email.toLowerCase().includes(search.toLowerCase());
@@ -78,35 +80,52 @@ export default function Clients() {
                     </thead>
 
                     <tbody>
-                        {filteredClients.map((client) => (
-                            <tr key={client.id} onClick={() => setSelectedClient(client)}>
-                                <td>
-                                    <div>
-                                        <div>{client.name.split(' ').map((n) => n[0]).join('')}</div>
+                        {filteredClients.length > 0 ? (
+                            filteredClients.map((client) => (
+                                <tr key={client.id} onClick={() => setSelectedClient(client)}>
+                                    <td>
                                         <div>
-                                            <p>{client.name}</p>
-                                            <p>{client.email}</p>
+                                            <div>{client.name.split(' ').map((n) => n[0]).join('')}</div>
+                                            <div>
+                                                <p>{client.name}</p>
+                                                <p>{client.email}</p>
+                                            </div>
                                         </div>
+                                    </td>
+
+                                    <td>{client.caseType}</td>
+                                    <td>{client.status}</td>
+                                    <td>{format(client.updatedAt, 'MMM d, yyyy')}</td>
+
+                                    <td>
+                                        <button>
+                                            <MoreHorizontal />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={5}>
+                                    <div>
+                                        <Search />
+                                        <h3>No Clients Found</h3>
+                                        <p>Add your first client to get started</p>
+                                        <button>
+                                            <Plus /> Add Client
+                                        </button>
                                     </div>
                                 </td>
-
-                                <td>{client.caseType}</td>
-                                <td>{client.status}</td>
-                                <td>{format(client.updatedAt, 'MMM d, yyyy')}</td>
-
-                                <td>
-                                    <button>
-                                        <MoreHorizontal />
-                                    </button>
-                                </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
 
-                <p>
-                    Showing {filteredClients.length} of {mockClients.length} clients
-                </p>
+                {filteredClients.length > 0 && (
+                    <p>
+                        Showing {filteredClients.length} of {clients.length} clients
+                    </p>
+                )}
             </div>
 
             {/* Details */}

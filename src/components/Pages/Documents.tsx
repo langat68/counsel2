@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Users,
@@ -14,16 +13,34 @@ import UpcomingAppointments from "../Dashboard/UpcomingAppointments";
 import QuickActions from "../Dashboard/QuickActions";
 import CaseChart from "../Dashboard/CaseChart";
 
-import {
-    mockClients,
-    mockAppointments,
-    mockStats,
-} from "@/data/mockData";
+import { Client, Appointment } from "@/types";
 import { toast } from "sonner";
+
+import "./Dashboard.scss";
 
 export default function Dashboard() {
     const navigate = useNavigate();
 
+    // Placeholder data - replace with real data from API/state management
+    const stats = {
+        totalClients: 0,
+        activeCases: 0,
+        pendingCases: 0,
+        closedCases: 0,
+        documentsUploaded: 0,
+    };
+
+    const clients: Client[] = [];
+    const appointments: Appointment[] = [];
+
+    const caseData = {
+        active: stats.activeCases,
+        pending: stats.pendingCases,
+        closed: stats.closedCases,
+        onHold: 0,
+    };
+
+    // Navigation handlers
     const handleNewClient = () => {
         navigate("/clients");
         toast.info("Opening client management...");
@@ -44,42 +61,34 @@ export default function Dashboard() {
         toast.info("Opening case notes...");
     };
 
-    const caseData = {
-        active: mockStats.activeCases,
-        pending: mockStats.pendingCases,
-        closed: mockStats.closedCases,
-        onHold: 1,
-    };
-
     return (
         <DashboardLayout
             title="Dashboard"
             subtitle="Welcome back! Here's your practice overview."
         >
             <div className="dashboard">
-
                 {/* Stats Section */}
                 <div className="stats-grid">
                     <StatCard
                         title="Total Clients"
-                        value={mockStats.totalClients}
+                        value={stats.totalClients}
                         icon={Users}
-                        trend={{ value: 12, isPositive: true }}
+                        trend={{ value: 0, isPositive: true }}
                         delay={0}
                     />
 
                     <StatCard
                         title="Active Cases"
-                        value={mockStats.activeCases}
+                        value={stats.activeCases}
                         icon={Briefcase}
-                        trend={{ value: 8, isPositive: true }}
+                        trend={{ value: 0, isPositive: true }}
                         delay={50}
                         iconClassName="icon-success"
                     />
 
                     <StatCard
                         title="Pending Cases"
-                        value={mockStats.pendingCases}
+                        value={stats.pendingCases}
                         icon={Clock}
                         delay={100}
                         iconClassName="icon-warning"
@@ -87,9 +96,9 @@ export default function Dashboard() {
 
                     <StatCard
                         title="Documents"
-                        value={mockStats.documentsUploaded}
+                        value={stats.documentsUploaded}
                         icon={FileText}
-                        trend={{ value: 24, isPositive: true }}
+                        trend={{ value: 0, isPositive: true }}
                         delay={150}
                         iconClassName="icon-info"
                     />
@@ -97,11 +106,10 @@ export default function Dashboard() {
 
                 {/* Main Content */}
                 <div className="content-grid">
-
                     {/* Left Column */}
                     <div className="left-column">
-                        <RecentClients clients={mockClients} />
-                        <UpcomingAppointments appointments={mockAppointments} />
+                        <RecentClients clients={clients} />
+                        <UpcomingAppointments appointments={appointments} />
                     </div>
 
                     {/* Right Column */}
@@ -112,7 +120,6 @@ export default function Dashboard() {
                             onNewAppointment={handleNewAppointment}
                             onNewNote={handleNewNote}
                         />
-
                         <CaseChart data={caseData} />
                     </div>
                 </div>

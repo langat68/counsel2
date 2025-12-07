@@ -1,0 +1,438 @@
+// CalendarPage.scss
+// Variables
+$primary-color: #3b82f6;
+$gold-color: #d4af37;
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+
+$bg-primary: #ffffff;
+$bg-secondary: #f9fafb;
+$bg-hover: #f3f4f6;
+$border-color: #e5e7eb;
+$text-primary: #111827;
+$text-secondary: #6b7280;
+$text-muted: #9ca3af;
+
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+$border-radius: 12px;
+$border-radius-sm: 8px;
+$spacing-xs: 0.5rem;
+$spacing-sm: 0.75rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
+$breakpoint-wide: 1280px;
+
+// Main Container
+.calendar-page {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-lg;
+    padding: $spacing-lg;
+
+    @media (min-width: $breakpoint-desktop) {
+        grid-template-columns: 2fr 1fr;
+    }
+
+    @media (max-width: $breakpoint-tablet) {
+        padding: $spacing-md;
+        gap: $spacing-md;
+    }
+}
+
+// Calendar Container (Left Side)
+.calendar-container {
+    width: 100%;
+}
+
+.calendar-card {
+    background: $bg-primary;
+    border-radius: $border-radius;
+    padding: $spacing-lg;
+    box-shadow: $shadow-md;
+    border: 1px solid $border-color;
+
+    @media (max-width: $breakpoint-tablet) {
+        padding: $spacing-md;
+    }
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-lg;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0;
+
+        @media (max-width: $breakpoint-tablet) {
+            font-size: 1.25rem;
+        }
+    }
+
+    .month-nav {
+        display: flex;
+        gap: $spacing-xs;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 1px solid $border-color;
+            background: $bg-primary;
+            border-radius: $border-radius-sm;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: $text-secondary;
+
+            &:hover {
+                background: $bg-hover;
+                border-color: $primary-color;
+                color: $primary-color;
+            }
+
+            &:active {
+                transform: scale(0.95);
+            }
+        }
+    }
+
+    .btn-gold {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        padding: $spacing-sm $spacing-md;
+        background: $gold-color;
+        color: white;
+        border: none;
+        border-radius: $border-radius-sm;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+
+        &:hover {
+            background: darken($gold-color, 8%);
+            transform: translateY(-1px);
+            box-shadow: $shadow-md;
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// Calendar Grid
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: $spacing-xs;
+    margin-top: $spacing-md;
+
+    @media (max-width: $breakpoint-tablet) {
+        gap: 4px;
+    }
+}
+
+.day-cell {
+    position: relative;
+    aspect-ratio: 1;
+    min-height: 80px;
+    padding: $spacing-xs;
+    background: $bg-secondary;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    @media (max-width: $breakpoint-tablet) {
+        min-height: 60px;
+        padding: 4px;
+    }
+
+    &:hover {
+        background: $bg-hover;
+        border-color: $primary-color;
+        transform: translateY(-2px);
+        box-shadow: $shadow-sm;
+    }
+
+    &.today {
+        background: lighten($primary-color, 45%);
+        border-color: $primary-color;
+        font-weight: 600;
+
+        .day-number {
+            color: $primary-color;
+        }
+    }
+
+    &.selected {
+        background: $primary-color;
+        border-color: $primary-color;
+        color: white;
+
+        .day-number {
+            color: white;
+        }
+
+        .apt-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .more-count {
+            color: white;
+        }
+    }
+
+    .day-number {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $text-primary;
+        margin-bottom: $spacing-xs;
+
+        @media (max-width: $breakpoint-tablet) {
+            font-size: 0.75rem;
+        }
+    }
+
+    .day-badges {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        width: 100%;
+        overflow: hidden;
+
+        .apt-badge {
+            font-size: 0.625rem;
+            padding: 2px 4px;
+            background: rgba($primary-color, 0.1);
+            color: $primary-color;
+            border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            @media (max-width: $breakpoint-tablet) {
+                font-size: 0.5rem;
+                padding: 1px 2px;
+            }
+        }
+
+        .more-count {
+            font-size: 0.625rem;
+            color: $text-muted;
+            font-weight: 500;
+
+            @media (max-width: $breakpoint-tablet) {
+                font-size: 0.5rem;
+            }
+        }
+    }
+}
+
+// Appointments Container (Right Side)
+.appointments-container {
+    width: 100%;
+}
+
+.appointments-card {
+    background: $bg-primary;
+    border-radius: $border-radius;
+    padding: $spacing-lg;
+    box-shadow: $shadow-md;
+    border: 1px solid $border-color;
+    height: fit-content;
+
+    @media (max-width: $breakpoint-tablet) {
+        padding: $spacing-md;
+    }
+}
+
+.appointments-header {
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-md;
+    border-bottom: 1px solid $border-color;
+
+    h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0;
+
+        @media (max-width: $breakpoint-tablet) {
+            font-size: 1rem;
+        }
+    }
+}
+
+.appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+}
+
+.appointment-item {
+    padding: $spacing-md;
+    background: $bg-secondary;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-sm;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: $primary-color;
+        box-shadow: $shadow-sm;
+        transform: translateX(4px);
+    }
+
+    .apt-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: $spacing-sm;
+        gap: $spacing-sm;
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: $text-primary;
+            margin: 0;
+            flex: 1;
+        }
+
+        .apt-type {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            background: lighten($primary-color, 45%);
+            color: $primary-color;
+            border-radius: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+    }
+
+    .apt-meta {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-xs;
+        margin-bottom: $spacing-sm;
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            gap: $spacing-xs;
+            font-size: 0.875rem;
+            color: $text-secondary;
+
+            svg {
+                flex-shrink: 0;
+            }
+        }
+    }
+
+    .apt-description {
+        font-size: 0.875rem;
+        color: $text-secondary;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+// Empty State
+.no-appointments {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-xl;
+    text-align: center;
+
+    .icon-circle {
+        width: 64px;
+        height: 64px;
+        background: $bg-secondary;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: $spacing-md;
+        color: $text-muted;
+    }
+
+    h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0 0 $spacing-xs 0;
+    }
+
+    p {
+        font-size: 0.875rem;
+        color: $text-secondary;
+        margin: 0 0 $spacing-md 0;
+    }
+
+    .btn-outline-sm {
+        display: flex;
+        align-items: center;
+        gap: $spacing-xs;
+        padding: $spacing-xs $spacing-md;
+        background: transparent;
+        color: $primary-color;
+        border: 1px solid $primary-color;
+        border-radius: $border-radius-sm;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: $primary-color;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: $shadow-sm;
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// Animations
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.calendar-card,
+.appointments-card {
+    animation: fadeIn 0.3s ease-out;
+}
