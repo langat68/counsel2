@@ -1,39 +1,38 @@
-import { DashboardLayout } from '../Layout/DashBoardLayout';
-import StatCard from '../Dashboard/StatCard';
-import RecentClients from '../Pages';
-import UpcomingAppointments from '../Dashboard/UpcomingAppointments';
-import QuickActions from '../Dashboard/QuickActions';
-import CaseChart from '../Dashboard/CaseChart';
+import { useNavigate } from "react-router-dom";
+import { Users, Briefcase, Clock, FileText } from "lucide-react";
 
-import { mockClients, mockAppointments, mockStats } from '@/data/mockData';
-import { Users, Briefcase, Clock, FileText } from 'lucide-react';
+import { DashboardLayout } from "../Layout/DashBoardLayout";
+import StatCard from "../Dashboard/StatCard";
+import RecentClients from "../Dashboard/RecentClients";
+import UpcomingAppointments from "../Dashboard/UpcomingAppointments";
+import QuickActions from "../Dashboard/QuickActions";
+import CaseChart from "../Dashboard/CaseChart";
 
-import { useNavigate } from 'react-router-dom';
+import { mockClients, mockAppointments, mockStats } from "@/data/mockData";
 
-
-import './Dashboard.scss';
+import "./Dashboard.scss";
 
 export default function Dashboard() {
     const navigate = useNavigate();
 
     const handleNewClient = () => {
-        navigate('/clients');
-        toast.info('Opening client management...');
+        navigate("/clients");
+        // toast.info('Opening client management...');
     };
 
     const handleUploadDocument = () => {
-        navigate('/documents');
-        toast.info('Opening document manager...');
+        navigate("/documents");
+        // toast.info('Opening document manager...');
     };
 
     const handleNewAppointment = () => {
-        navigate('/calendar');
-        toast.info('Opening calendar...');
+        navigate("/calendar");
+        // toast.info('Opening calendar...');
     };
 
     const handleNewNote = () => {
-        navigate('/notes');
-        toast.info('Opening case notes...');
+        navigate("/notes");
+        // toast.info('Opening case notes...');
     };
 
     const caseData = {
@@ -89,13 +88,13 @@ export default function Dashboard() {
 
                 {/* Main Content */}
                 <div className="content-grid">
-                    {/* Left side */}
+                    {/* Left Column */}
                     <div className="left-column">
                         <RecentClients clients={mockClients} />
                         <UpcomingAppointments appointments={mockAppointments} />
                     </div>
 
-                    {/* Right side */}
+                    {/* Right Column */}
                     <div className="right-column">
                         <QuickActions
                             onNewClient={handleNewClient}
