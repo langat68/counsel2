@@ -1,0 +1,246 @@
+// QuickActions.scss
+
+.quick-actions {
+    &.card {
+        background: linear-gradient(135deg, #1e2028 0%, #252831 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+
+        &:hover {
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+    }
+
+    .card-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+        h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f8f9fa;
+            letter-spacing: -0.01em;
+        }
+    }
+
+    .card-content {
+        &.actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+    }
+
+    .action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 1.5rem 1rem;
+        background: linear-gradient(135deg, #2a2d38 0%, #1f2229 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        color: #e1e4e8;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+
+        // Subtle gradient overlay on hover
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 20px rgba(99, 102, 241, 0.1);
+            color: #fff;
+
+            &::before {
+                opacity: 1;
+            }
+
+            .action-icon {
+                transform: scale(1.1);
+                color: #818cf8;
+            }
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &:focus-visible {
+            outline: 2px solid #818cf8;
+            outline-offset: 2px;
+        }
+
+        .action-icon {
+            width: 24px;
+            height: 24px;
+            color: #a5b4fc;
+            transition: all 0.3s ease;
+        }
+
+        span {
+            text-align: center;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+    }
+}
+
+// Slide-up animation
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+// Responsive design for tablets
+@media (max-width: 768px) {
+    .quick-actions {
+        &.card {
+            padding: 1.25rem;
+        }
+
+        .card-header {
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.875rem;
+
+            h3 {
+                font-size: 1.125rem;
+            }
+        }
+
+        .card-content.actions-grid {
+            gap: 0.875rem;
+        }
+
+        .action-btn {
+            padding: 1.25rem 0.875rem;
+            gap: 0.625rem;
+
+            .action-icon {
+                width: 22px;
+                height: 22px;
+            }
+
+            span {
+                font-size: 0.8125rem;
+            }
+        }
+    }
+}
+
+// Responsive design for mobile
+@media (max-width: 480px) {
+    .quick-actions {
+        &.card {
+            padding: 1rem;
+        }
+
+        .card-header {
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+
+            h3 {
+                font-size: 1rem;
+            }
+        }
+
+        .card-content.actions-grid {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            flex-direction: row;
+            justify-content: flex-start;
+            padding: 1rem 1.25rem;
+            gap: 1rem;
+
+            .action-icon {
+                width: 20px;
+                height: 20px;
+            }
+
+            span {
+                font-size: 0.875rem;
+                text-align: left;
+            }
+        }
+    }
+}
+
+// Alternative layout for very small screens
+@media (max-width: 360px) {
+    .quick-actions {
+        .action-btn {
+            padding: 0.875rem 1rem;
+        }
+    }
+}
+
+// Dark theme enhancements
+@media (prefers-color-scheme: dark) {
+    .quick-actions.card {
+        background: linear-gradient(135deg, #1a1c23 0%, #212429 100%);
+    }
+
+    .action-btn {
+        background: linear-gradient(135deg, #252831 0%, #1c1f26 100%);
+    }
+}
+
+// Loading state (optional enhancement)
+.quick-actions.loading {
+    .action-btn {
+        pointer-events: none;
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+// Disabled state
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &:hover {
+        transform: none;
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: none;
+    }
+}

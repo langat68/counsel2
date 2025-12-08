@@ -1,0 +1,362 @@
+// StatCard.scss
+
+.stat-card {
+    background: linear-gradient(135deg, #1e2028 0%, #252831 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+
+    // Subtle shine effect on hover
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg,
+                transparent,
+                rgba(255, 255, 255, 0.03),
+                transparent);
+        transition: left 0.5s ease;
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+        border-color: rgba(255, 255, 255, 0.1);
+
+        &::before {
+            left: 100%;
+        }
+
+        .stat-icon {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .icon {
+            filter: drop-shadow(0 4px 8px currentColor);
+        }
+    }
+
+    &:active {
+        transform: translateY(-2px);
+    }
+}
+
+.stat-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.stat-left {
+    flex: 1;
+    min-width: 0; // Allow text truncation
+}
+
+.stat-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+}
+
+.stat-value {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f8f9fa;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+
+    // Add number animation on load
+    animation: countUp 0.8s ease-out;
+}
+
+.stat-trend {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &.positive {
+        color: #4ade80;
+
+        &::before {
+            content: '↑';
+            font-size: 1rem;
+            font-weight: 700;
+        }
+    }
+
+    &.negative {
+        color: #f87171;
+
+        &::before {
+            content: '↓';
+            font-size: 1rem;
+            font-weight: 700;
+        }
+    }
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+
+    // Default gradient
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+
+    .icon {
+        width: 28px;
+        height: 28px;
+        color: #a5b4fc;
+        transition: all 0.3s ease;
+    }
+
+    // Icon color variants
+    &.icon-primary {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+
+        .icon {
+            color: #a5b4fc;
+        }
+    }
+
+    &.icon-success {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+
+        .icon {
+            color: #4ade80;
+        }
+    }
+
+    &.icon-warning {
+        background: linear-gradient(135deg, rgba(251, 146, 60, 0.2) 0%, rgba(245, 158, 11, 0.2) 100%);
+        box-shadow: 0 4px 12px rgba(251, 146, 60, 0.15);
+
+        .icon {
+            color: #fbbf24;
+        }
+    }
+
+    &.icon-danger {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+
+        .icon {
+            color: #f87171;
+        }
+    }
+
+    &.icon-info {
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+
+        .icon {
+            color: #38bdf8;
+        }
+    }
+
+    &.icon-purple {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+        box-shadow: 0 4px 12px rgba(168, 85, 247, 0.15);
+
+        .icon {
+            color: #c084fc;
+        }
+    }
+}
+
+// Slide-up animation
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+// Count-up animation for numbers
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Responsive design for tablets
+@media (max-width: 768px) {
+    .stat-card {
+        padding: 1.25rem;
+    }
+
+    .stat-title {
+        font-size: 0.8125rem;
+        margin-bottom: 0.375rem;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+        margin-bottom: 0.375rem;
+    }
+
+    .stat-trend {
+        font-size: 0.75rem;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+
+// Responsive design for mobile
+@media (max-width: 480px) {
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-content {
+        gap: 0.75rem;
+    }
+
+    .stat-title {
+        font-size: 0.75rem;
+        margin-bottom: 0.375rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .stat-trend {
+        font-size: 0.6875rem;
+
+        &::before {
+            font-size: 0.875rem;
+        }
+    }
+
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+
+        .icon {
+            width: 22px;
+            height: 22px;
+        }
+    }
+}
+
+// Dark theme enhancements
+@media (prefers-color-scheme: dark) {
+    .stat-card {
+        background: linear-gradient(135deg, #1a1c23 0%, #212429 100%);
+    }
+}
+
+// Loading state
+.stat-card.loading {
+    pointer-events: none;
+
+    .stat-value,
+    .stat-trend {
+        opacity: 0.5;
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+// Grid layout helper (when used in a grid)
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+        gap: 0.875rem;
+    }
+}
+
+// Compact variant
+.stat-card.compact {
+    padding: 1rem;
+
+    .stat-title {
+        font-size: 0.75rem;
+        margin-bottom: 0.375rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+
+        .icon {
+            width: 22px;
+            height: 22px;
+        }
+    }
+}
